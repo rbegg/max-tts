@@ -1,0 +1,19 @@
+services:
+  tts-dev:
+    build:
+      # The context is relative to this Compose file, pointing to the parent `max-tts` directory.
+      context: ..
+      dockerfile: Dockerfile
+      target: dev
+    volumes:
+      # Mount the entire service directory into the container at the /test workspace.
+      # The source path is relative to this compose file.
+      - type: bind
+        source: ..
+        target: /test
+        #bind:
+        #  propagation: rshared
+    ports:
+      - '10200:10200'
+    # Override the Dockerfile's entrypoint to keep the container running for development.
+    command: sleep infinity
