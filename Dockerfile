@@ -5,8 +5,13 @@ ARG PYTHON_VERSION=3.11
 
 FROM rhasspy/wyoming-piper AS base
 
+USER root
+
+RUN apt-get update && apt-get install -y netcat-openbsd && rm -rf /var/lib/apt/lists/*
+
+
 # pord target is identical aa base
-from base as prod
+FROM base AS prod
 
 CMD ["--voice", "-en_US-lessac-medium"]
 
@@ -45,9 +50,9 @@ COPY requirements.txt .
 COPY --chown=testuser:testuser . .
 RUN chmod +x ./run-tests.sh
 RUN cp /run.sh ./run.sh
-run chown 1000:1000 ./run.sh
-run mkdir /data
-run chown -R 1000:1000 /data
+RUN chown 1000:1000 ./run.sh
+RUN mkdir /data
+RUN chown -R 1000:1000 /data
 
 USER testuser
 
